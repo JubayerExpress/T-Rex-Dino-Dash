@@ -5,13 +5,14 @@ canvas.height = 200;
 
 let dino = {
     x: 50,
-    y: 150,
+    y: canvas.height - 40,
     width: 40,
     height: 40,
     dy: 0,
     gravity: 0.6,
     jumpPower: -12,
-    isJumping: false
+    isJumping: false,
+    isGrounded: true
 };
 
 let obstacles = [];
@@ -33,7 +34,7 @@ function drawObstacles() {
 
 function updateObstacles() {
     if (frame % 100 === 0) {
-        let height = 40;
+        let height = Math.random() * (40 - 20) + 20; // Random height between 20 and 40
         let obstacle = {
             x: canvas.width,
             y: canvas.height - height,
@@ -65,14 +66,13 @@ function detectCollision() {
 }
 
 function handleJump() {
-    if (dino.isJumping) {
-        dino.dy += dino.gravity;
-        dino.y += dino.dy;
-        if (dino.y >= canvas.height - dino.height) {
-            dino.y = canvas.height - dino.height;
-            dino.isJumping = false;
-            dino.dy = 0;
-        }
+    dino.dy += dino.gravity;
+    dino.y += dino.dy;
+
+    if (dino.y >= canvas.height - dino.height) {
+        dino.y = canvas.height - dino.height;
+        dino.isGrounded = true;
+        dino.dy = 0;
     }
 }
 
@@ -105,8 +105,9 @@ function gameLoop() {
 }
 
 document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' && !dino.isJumping) {
+    if (e.code === 'Space' && dino.isGrounded) {
         dino.isJumping = true;
+        dino.isGrounded = false;
         dino.dy = dino.jumpPower;
     }
 });
