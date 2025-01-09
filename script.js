@@ -1,14 +1,22 @@
 const dino = document.getElementById("dino");
 const obstacle = document.getElementById("obstacle");
 const gameOver = document.getElementById("gameOver");
+const scoreDisplay = document.getElementById("score");
+const restartBtn = document.getElementById("restartBtn");
 
 let isJumping = false;
 let isGameOver = false;
+let score = 0;
+let gameSpeed = 2000;
 
 document.addEventListener("keydown", function (event) {
-    if (event.code === "Space") {
+    if (event.code === "Space" && !isGameOver) {
         jump();
     }
+});
+
+restartBtn.addEventListener("click", function () {
+    location.reload(); // Reload page to restart the game
 });
 
 function jump() {
@@ -33,6 +41,22 @@ function jump() {
     }, 20);
 }
 
+function moveObstacle() {
+    if (isGameOver) return;
+    obstacle.style.animation = `moveObstacle ${gameSpeed / 1000}s linear infinite`;
+}
+
+function updateScore() {
+    if (isGameOver) return;
+    score++;
+    scoreDisplay.innerText = `Score: ${score}`;
+    // Increase speed of obstacle every 50 points
+    if (score % 50 === 0 && gameSpeed > 500) {
+        gameSpeed -= 100;
+        moveObstacle();
+    }
+}
+
 const checkCollision = setInterval(function () {
     const dinoTop = parseInt(window.getComputedStyle(dino).getPropertyValue("bottom"));
     const obstacleLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("right"));
@@ -42,5 +66,10 @@ const checkCollision = setInterval(function () {
         obstacle.style.animation = "none";
         isGameOver = true;
         clearInterval(checkCollision);
+        clearInterval(scoreInterval);
+        restartBtn.style.display = "block";
     }
 }, 10);
+
+const scoreInterval = setInterval(updateScore, 100); // Update score every 100ms
+moveObstacle();
