@@ -51,6 +51,23 @@
             color: red;
             font-size: 24px;
             display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .score {
+            font-size: 20px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        .restart-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -58,7 +75,9 @@
     <div class="game">
         <div class="dino" id="dino"></div>
         <div class="obstacle" id="obstacle"></div>
+        <div class="score" id="score">Score: 0</div>
         <div class="game-over" id="gameOver">Game Over!</div>
+        <button class="restart-btn" id="restartBtn">Restart</button>
     </div>
 
     <script src="script.js"></script>
